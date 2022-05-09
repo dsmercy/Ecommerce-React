@@ -1,5 +1,4 @@
-import { List, ListItem, ListItemAvatar, Avatar, ListItemText } from '@mui/material'
-import React from 'react'
+import { List } from '@mui/material'
 import { Product } from '../../models/product';
 import ProductCard from './ProductCard';
 
