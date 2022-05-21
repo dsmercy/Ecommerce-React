@@ -8,7 +8,7 @@ namespace API.Controllers
         [HttpGet("not-found")]
         public ActionResult GetNotFound()
         {
-            return NotFound();
+            return NotFound("Not found");
         }
 
         [HttpGet("bad-request")]
