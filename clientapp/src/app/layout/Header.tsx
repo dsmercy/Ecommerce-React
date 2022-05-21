@@ -16,7 +16,7 @@ const rightLinks = [
     { title: 'register', path: '/register' }
 ]
 const navStyles = {
-    color: 'inherit',
+    color: 'inherit', 
     textDecoration: 'none',
     typography: 'h6',
     '&:hover': {
@@ -35,7 +35,7 @@ export default function Header({ darkMode, handleThemeChange }: Props) {
                     <Typography variant='h6' component={NavLink} exact to='/'
                         sx={navStyles}>
                         RE-STORE
-                    </Typography>
+                    </Typography>   
                     <Switch checked={darkMode} onChange={handleThemeChange} />
                 </Box>
                 <List sx={{ display: 'flex' }}>
