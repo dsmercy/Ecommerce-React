@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './styles.css';
-import { Product } from '../models/product';
 import Catalog from '../features/catalog/Catalog';
 import { CssBaseline, Container, createTheme, ThemeProvider } from '@mui/material';
 import Header from './Header';
