@@ -8,22 +8,25 @@ import { useStoreContext } from '../../context/StoreContext';
 export default function BasketPage() {
 
     const { basket, setBasket, removeItem } = useStoreContext();
-    const [loading, setLoading] = useState(false);
+    const [status, setStatus] = useState({
+        loading: false,
+        name: ''
+    });
 
-    function handleAddItem(productId: number) {
-        setLoading(true);
+    function handleAddItem(productId: number, name: string) {
+        setStatus({ loading: true, name });
         agent.Basket.addItem(productId)
             .then(basket => setBasket(basket))
             .catch(error => console.log(error))
-            .finally(() => setLoading(false))
+            .finally(() => setStatus({ loading: false, name: '' }))
     }
 
-    function handleRemoveItem(productId: number, quantity = 1) {
-        setLoading(true);
+    function handleRemoveItem(productId: number, quantity = 1, name: string) {
+        setStatus({ loading: true, name });
         agent.Basket.removeItem(productId, quantity)
             .then(() => removeItem(productId, quantity))
             .catch(error => console.log(error))
-            .finally(() => setLoading(false));
+            .finally(() => setStatus({ loading: false, name: '' }));
     }
 
 
@@ -58,16 +61,16 @@ export default function BasketPage() {
                                 <TableCell align="right">${(item.price / 100).toFixed(2)}</TableCell>
                                 <TableCell align="center">
                                     <LoadingButton
-                                        loading={loading}
-                                        onClick={() => handleRemoveItem(item.productId)}
+                                        loading={status.loading && status.name === 'rem' + item.productId}
+                                        onClick={() => handleRemoveItem(item.productId, 1, 'rem' + item.productId)}
                                         color='error'
                                     >
                                         <Remove />
                                     </LoadingButton>
                                     {item.quantity}
                                     <LoadingButton
-                                        loading={loading}
-                                        onClick={() => handleAddItem(item.productId)}
+                                        loading={status.loading && status.name === 'add' + item.productId}
+                                        onClick={() => handleAddItem(item.productId, 'add' + item.productId)}
                                         color='secondary'
                                     >
                                         <Add />
@@ -76,8 +79,8 @@ export default function BasketPage() {
                                 <TableCell align="right">${((item.price / 100) * item.quantity).toFixed(2)}</TableCell>
                                 <TableCell align="right">
                                     <LoadingButton
-                                        loading={loading}
-                                        onClick={() => handleRemoveItem(item.productId, item.quantity)}
+                                        loading={status.loading && status.name === 'del' + item.productId}
+                                        onClick={() => handleRemoveItem(item.productId, item.quantity, 'del' + item.productId)}
                                         color='error'
                                     >
                                         <Delete />
