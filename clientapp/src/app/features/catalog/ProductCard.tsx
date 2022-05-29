@@ -3,6 +3,7 @@ import { Avatar, Button, Card, CardActions, CardContent, CardHeader, CardMedia, 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import agent from '../../api/agent';
+import { useStoreContext } from '../../context/StoreContext';
 import { Product } from '../../models/product';
 
 interface Props {
@@ -12,11 +13,12 @@ interface Props {
 export default function ProductCard({ product}: Props) {
 
     const [loading, setLoading] = useState(false);
+    const {setBasket} = useStoreContext();
 
     function handleAddItem(productId: number) {
         setLoading(true);
         agent.Basket.addItem(productId)
-            // .then(basket => setBasket(basket))
+            .then(basket => setBasket(basket))
             .catch(error => console.log(error))
             .finally(() => setLoading(false));
     }
@@ -38,6 +40,7 @@ export default function ProductCard({ product}: Props) {
                 sx={{height: 140, backgroundSize: 'contain', bgcolor: 'primary.light'}}
                 image={product.pictureUrl}
                 title={product.name}
+                component={Link} to={`/catalog/${product.id}`}
             />
             <CardContent>
                 <Typography gutterBottom color='secondary' variant="h5">

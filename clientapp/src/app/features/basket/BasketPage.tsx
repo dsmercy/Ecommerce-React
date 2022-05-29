@@ -5,7 +5,7 @@ import { useStoreContext } from '../../context/StoreContext';
 
 export default function BasketPage() {
 
-    const { basket, setBasket, removeItem } = useStoreContext();
+    const { basket} = useStoreContext();
     if (!basket) return <Typography variant='h3'>Your Basket is empty</Typography>
 
     return (
