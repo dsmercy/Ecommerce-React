@@ -6,7 +6,7 @@ import agent from '../../api/agent';
 import LoadingComponent from '../../layout/LoadingComponent';
 import { Product } from '../../models/product';
 import { useAppDispatch, useAppSelector } from '../../store/configureStore';
-import { addBasketItemAsync, setBasket } from '../basket/basketSlice';
+import { addBasketItemAsync } from '../basket/basketSlice';
 
 export default function ProductDetails() {
 
