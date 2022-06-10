@@ -14,7 +14,6 @@ import ServerError from '../errors/ServerError';
 import NotFound from '../errors/NotFound';
 import BasketPage from '../features/basket/BasketPage';
 import agent from '../api/agent';
-import { useStoreContext } from '../context/StoreContext';
 import { getCookie } from '../util/util';
 import LoadingComponent from './LoadingComponent';
 import CheckoutPage from '../features/checkout/CheckoutPage';
@@ -38,7 +37,7 @@ function App() {
     } else {
       setLoading(false);
     }
-  }, [setBasket])
+  }, [dispatch])
 
 
   const paletteType = darkMode ? 'dark' : 'light'

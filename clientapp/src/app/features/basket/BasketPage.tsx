@@ -4,12 +4,14 @@ import { Box, Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import agent from '../../api/agent';
-import { useStoreContext } from '../../context/StoreContext';
-import BasketSummary from './basket/BasketSummary';
+import { useAppDispatch, useAppSelector } from '../../store/configureStore';
+import BasketSummary from './BasketSummary';
+import { removeItem, setBasket } from './basketSlice';
 
 export default function BasketPage() {
 
-    const { basket, setBasket, removeItem } = useStoreContext();
+    const { basket} = useAppSelector(state=>state.basket);
+    const dispatch = useAppDispatch();
     const [status, setStatus] = useState({
         loading: false,
         name: ''
@@ -18,7 +20,7 @@ export default function BasketPage() {
     function handleAddItem(productId: number, name: string) {
         setStatus({ loading: true, name });
         agent.Basket.addItem(productId)
-            .then(basket => setBasket(basket))
+            .then(basket =>dispatch(setBasket(basket)))
             .catch(error => console.log(error))
             .finally(() => setStatus({ loading: false, name: '' }))
     }
@@ -26,7 +28,7 @@ export default function BasketPage() {
     function handleRemoveItem(productId: number, quantity = 1, name: string) {
         setStatus({ loading: true, name });
         agent.Basket.removeItem(productId, quantity)
-            .then(() => removeItem(productId, quantity))
+            .then(() =>dispatch(removeItem({productId, quantity})))
             .catch(error => console.log(error))
             .finally(() => setStatus({ loading: false, name: '' }));
     }
@@ -55,8 +57,8 @@ export default function BasketPage() {
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
                                 <TableCell component="th" scope="row">
-                                    <Box display='flex' alignItems='center'>
-                                        <img src={item.pictureUrl} alt={item.name} style={{ height: 50, marginRight: 20 }} />
+                                    <Box display='flex' alignItems='center' >
+                                        <img src={item.pictureUrl} alt={item.name} style={{ height: 50, marginRight: 20 }}  />
                                         <span>{item.name}</span>
                                     </Box>
                                 </TableCell>

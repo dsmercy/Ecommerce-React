@@ -3,9 +3,10 @@ import { Divider, Grid, Table, TableBody, TableCell, TableContainer, TableRow, T
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import agent from '../../api/agent';
-import { useStoreContext } from '../../context/StoreContext';
 import LoadingComponent from '../../layout/LoadingComponent';
 import { Product } from '../../models/product';
+import { useAppDispatch } from '../../store/configureStore';
+import { setBasket } from '../basket/basketSlice';
 
 export default function ProductDetails() {
 
@@ -15,7 +16,7 @@ export default function ProductDetails() {
         loading: false,
         name: ''
     });
-    const { setBasket } = useStoreContext();
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         setStatus({ loading: true, name: '' });
@@ -29,7 +30,7 @@ export default function ProductDetails() {
     function handleAddItem(productId: number, name: string) {
         setStatus({ loading: true, name });
         agent.Basket.addItem(productId)
-            .then(basket => setBasket(basket))
+            .then(basket =>dispatch(setBasket(basket)))
             .catch(error => console.log(error))
             .finally(() => setStatus({ loading: false, name: '' }))
     }
