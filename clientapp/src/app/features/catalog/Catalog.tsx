@@ -1,4 +1,3 @@
-import types from '@emotion/styled';
 import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, Grid, Pagination, Paper, Radio, RadioGroup, TextField, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import LoadingComponent from '../../layout/LoadingComponent';
@@ -38,7 +37,7 @@ export default function Catalog() {
           <FormControl component='fieldset'>
             <RadioGroup>
               {sortOptions.map(({ value, label }) => (
-                <FormControlLabel value={value} control={<Radio />} label={label} />
+                <FormControlLabel value={value} control={<Radio />} label={label} key={value} />
               ))}
             </RadioGroup>
           </FormControl>
