@@ -4,6 +4,7 @@ import LoadingComponent from '../../layout/LoadingComponent';
 import { useAppDispatch, useAppSelector } from '../../store/configureStore';
 import { fetchFilters, fetchProductsAsync, productSelectors } from './catalogSlice';
 import ProductList from './ProductList';
+import ProductSearch from './ProductSearch';
 
 const sortOptions = [
   { value: 'name', label: 'Alphabetical' },
@@ -31,7 +32,7 @@ export default function Catalog() {
     <Grid container columnSpacing={4}>
       <Grid item xs={3}>
         <Paper sx={{ mb: 2 }}>
-          <TextField label="Search products" variant='outlined' />
+          <ProductSearch />
         </Paper>
         <Paper sx={{ mb: 2, p: 2 }}>
           <FormControl component='fieldset'>
