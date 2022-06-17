@@ -1,5 +1,6 @@
 import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, Grid, Pagination, Paper, Radio, RadioGroup, TextField, Typography } from '@mui/material';
 import { useEffect } from 'react';
+import CheckboxButtons from '../../components/CheckboxButtons';
 import RadioButtonGroup from '../../components/RadioButtonGroup';
 import LoadingComponent from '../../layout/LoadingComponent';
 import { useAppDispatch, useAppSelector } from '../../store/configureStore';
@@ -15,7 +16,7 @@ const sortOptions = [
 
 export default function Catalog() {
   const products = useAppSelector(productSelectors.selectAll);
-  const { productsLoaded, status, filtersLoaded, brands, types ,productParams} = useAppSelector(state => state.catalog);
+  const { productsLoaded, status, filtersLoaded, brands, types, productParams } = useAppSelector(state => state.catalog);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -36,29 +37,25 @@ export default function Catalog() {
           <ProductSearch />
         </Paper>
         <Paper sx={{ mb: 2, p: 2 }}>
-        <RadioButtonGroup
-                        selectedValue={productParams.orderBy}
-                        options={sortOptions}
-                        onChange={(e) => dispatch(setProductParams({ orderBy: e.target.value }))}
-                    />
+          <RadioButtonGroup
+            selectedValue={productParams.orderBy}
+            options={sortOptions}
+            onChange={(e) => dispatch(setProductParams({ orderBy: e.target.value }))}
+          />
         </Paper>
         <Paper sx={{ mb: 2, p: 2 }}>
-          <FormControl component='fieldset'>
-            <FormGroup>
-              {brands.map(brand => (
-                <FormControlLabel control={<Checkbox />} label={brand} key={brand} />
-              ))}
-            </FormGroup>
-          </FormControl>
+          <CheckboxButtons
+            items={brands}
+            checked={productParams.brands}
+            onChange={(items: string[]) => dispatch(setProductParams({ brands: items }))}
+          />
         </Paper>
         <Paper sx={{ mb: 2, p: 2 }}>
-          <FormControl component='fieldset'>
-            <FormGroup>
-              {types.map(type => (
-                <FormControlLabel control={<Checkbox />} label={type} key={type} />
-              ))}
-            </FormGroup>
-          </FormControl>
+          <CheckboxButtons
+            items={types}
+            checked={productParams.types}
+            onChange={(items: string[]) => dispatch(setProductParams({ types: items }))}
+          />
         </Paper>
       </Grid>
       <Grid item xs={9}>
