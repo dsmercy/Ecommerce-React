@@ -5,7 +5,7 @@ import CheckboxButtons from '../../components/CheckboxButtons';
 import RadioButtonGroup from '../../components/RadioButtonGroup';
 import LoadingComponent from '../../layout/LoadingComponent';
 import { useAppDispatch, useAppSelector } from '../../store/configureStore';
-import { fetchFilters, fetchProductsAsync, productSelectors, setProductParams } from './catalogSlice';
+import { fetchFilters, fetchProductsAsync, productSelectors, setPageNumber, setProductParams } from './catalogSlice';
 import ProductList from './ProductList';
 import ProductSearch from './ProductSearch';
 
@@ -67,7 +67,7 @@ export default function Catalog() {
                 {metaData &&
                 <AppPagination 
                     metaData={metaData}
-                    onPageChange={(page: number) => dispatch(setProductParams({pageNumber: page}))}
+                    onPageChange={(page: number) => dispatch(setPageNumber({pageNumber: page}))}
                 />}
             </Grid>
     </Grid >
