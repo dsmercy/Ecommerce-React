@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import './styles.css';
 import Catalog from '../features/catalog/Catalog';
 import { CssBaseline, Container, createTheme, ThemeProvider } from '@mui/material';
@@ -18,7 +18,7 @@ import { getCookie } from '../util/util';
 import LoadingComponent from './LoadingComponent';
 import CheckoutPage from '../features/checkout/CheckoutPage';
 import { useAppDispatch } from '../store/configureStore';
-import { setBasket } from '../features/basket/basketSlice';
+import { fetchBasketAsync, setBasket } from '../features/basket/basketSlice';
 import Login from '../features/account/Login';
 import Register from '../features/account/Register';
 import { fetchCurrentUser } from '../features/account/accountSlice';
@@ -26,24 +26,23 @@ import { fetchCurrentUser } from '../features/account/accountSlice';
 
 function App() {
 
-  const dispatch = useAppDispatch();
-  const [loading, setLoading] = useState(true);
-  const [darkMode, setDarkMode] = useState(true);
+    const dispatch = useAppDispatch();
+    const [loading, setLoading] = useState(true);
+  
+    const initApp = useCallback(async () => {
+      try {
+        await dispatch(fetchCurrentUser());
+        await dispatch(fetchBasketAsync());
+      } catch (error) {
+        console.log(error);
+      }
+    }, [dispatch])
+  
+    useEffect(() => {
+      initApp().then(() => setLoading(false));
+    }, [initApp])
 
-  useEffect(() => {
-    const buyerId = getCookie('buyerId');
-    dispatch(fetchCurrentUser());
-    if (buyerId) {
-      agent.Basket.get()
-        .then(basket => dispatch(setBasket(basket)))
-        .catch(error => console.log(error))
-        .finally(() => setLoading(false))
-    } else {
-      setLoading(false);
-    }
-  }, [dispatch])
-
-
+    const [darkMode, setDarkMode] = useState(true);
   const paletteType = darkMode ? 'dark' : 'light'
   const theme = createTheme({
     palette: {
