@@ -1,18 +1,13 @@
-import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { Paper } from '@mui/material';
-import agent from '../../api/agent';
 import { FieldValues, useForm } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
 import { useAppDispatch } from '../../store/configureStore';
@@ -22,7 +17,7 @@ import { signInUser } from './accountSlice';
 export default function Login() {
     const history = useHistory();
     const dispatch = useAppDispatch();
-
+    const location = useLocation<any>();
     const { register, handleSubmit, formState: { isSubmitting, errors, isValid } } = useForm({
         mode: 'all'
     });
@@ -30,7 +25,7 @@ export default function Login() {
     async function submitForm(data: FieldValues) {
         try {
             await dispatch(signInUser(data));
-            history.push('/catalog');
+            history.push(location.state?.from?.pathname ||  '/catalog');
         } catch (error) {
             console.log(error);
         }
