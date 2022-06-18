@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice,isAnyOf} from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
 import agent from "../../api/agent";
 import { Basket } from "../../models/basket";
 import { getCookie } from "../../util/util";
@@ -58,13 +58,14 @@ export const basketSlice = createSlice({
     reducers: {
         setBasket: (state, action) => {
             state.basket = action.payload
+        },
+        clearBasket: (state) => {
+            state.basket = null;
         }
     },
     extraReducers: (builder => {
-       
-        builder.addCase(addBasketItemAsync.rejected, (state, action) => {
-            console.log(action.payload);
-            state.status = 'idle';
+        builder.addCase(addBasketItemAsync.pending, (state, action) => {
+            state.status = 'pendingAddItem' + action.meta.arg.productId;
         });
         builder.addCase(removeBasketItemAsync.pending, (state, action) => {
             state.status = 'pendingRemoveItem' + action.meta.arg.productId + action.meta.arg.name;
@@ -81,7 +82,7 @@ export const basketSlice = createSlice({
         builder.addCase(removeBasketItemAsync.rejected, (state, action) => {
             console.log(action.payload);
             state.status = 'idle';
-        })
+        });
         builder.addMatcher(isAnyOf(addBasketItemAsync.fulfilled, fetchBasketAsync.fulfilled), (state, action) => {
             state.basket = action.payload;
             state.status = 'idle';
@@ -93,4 +94,4 @@ export const basketSlice = createSlice({
     })
 })
 
-export const {setBasket} = basketSlice.actions;
+export const {setBasket, clearBasket} = basketSlice.actions;
