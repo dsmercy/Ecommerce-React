@@ -90,7 +90,7 @@ export const catalogSlice = createSlice({
         },
         setPageNumber: (state, action) => {
             state.productsLoaded = false;
-            state.productParams = { ...state.productParams, ...action.payload };
+            state.productParams = { ...state.productParams, ...action.payload }
         },
         setMetaData: (state, action) => {
             state.metaData = action.payload;
