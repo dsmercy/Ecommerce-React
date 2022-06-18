@@ -15,11 +15,24 @@ import agent from '../../api/agent';
 
 export default function Register() {
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
-    //const history = useHistory();
-    const { register, handleSubmit, formState: { isSubmitting, errors, isValid } } = useForm({
+    const history = useHistory();
+    const { register, handleSubmit, setError, formState: { isSubmitting, errors, isValid } } = useForm({
         mode: 'all'
     });
 
+    function handleApiErrors(errors: any) {
+      if (errors) {
+          errors.forEach((error: string) => {
+              if (error.includes('Password')) {
+                  setError('password', { message: error })
+              } else if (error.includes('Email')) {
+                  setError('email', { message: error })
+              } else if (error.includes('Username')) {
+                  setError('username', { message: error })
+              }
+          });
+      }
+  }
 
     return (
         <Container component={Paper} maxWidth="sm" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', p: 4 }}>
@@ -32,7 +45,11 @@ export default function Register() {
             <Box component="form"
                 onSubmit={handleSubmit((data) =>
                     agent.Account.register(data)
-                    .catch(error => setValidationErrors(error))
+                        .then(() => {
+                            toast.success('Registration successful - you can now login');
+                            history.push('/login');
+                        })
+                        .catch(error => handleApiErrors(error))
                 )}
                 noValidate sx={{ mt: 1 }}
             >
@@ -50,7 +67,12 @@ export default function Register() {
                     fullWidth
                     label="Email address"
                     {...register('email', { 
-                        required: 'Email is required'})}
+                      required: 'Email is required',
+                      pattern: {
+                          value: /^\w+[\w-.]*@\w+((-\w+)|(\w*)).[a-z]{2,3}$/,
+                          message: 'Not a valid email address'
+                      } 
+                  })}
                     error={!!errors.email}
                     helperText={errors?.email?.message}
                 />
@@ -60,7 +82,12 @@ export default function Register() {
                     label="Password"
                     type="password"
                     {...register('password', { 
-                        required: 'Password is required'})}
+                      required: 'Password is required',
+                      pattern: {
+                          value: /(?=^.{6,10}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&amp;*()_+}{&quot;:;'?/&gt;.&lt;,])(?!.*\s).*$/,
+                          message: 'Password is not complex enough'
+                      }
+                  })}
                     error={!!errors.password}
                     helperText={errors?.password?.message}
                 />
