@@ -6,6 +6,10 @@ import PaymentForm from "./PaymentForm";
 import Review from "./Review";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { validationSchema } from "./checkoutValidation";
+import { clearBasket } from "../basket/basketSlice";
+import agent from "../../api/agent";
+import { useAppDispatch } from "../../store/configureStore";
+import { LoadingButton } from "@mui/lab";
 
 const steps = ['Shipping address', 'Review your order', 'Payment details'];
 
@@ -25,18 +29,34 @@ function getStepContent(step: number) {
 export default function CheckoutPage() {
    
     const [activeStep, setActiveStep] = useState(0);
+    const [orderNumber, setOrderNumber] = useState(0);
+    const [loading, setLoading] = useState(false);
+    const dispatch = useAppDispatch();
+
     const currentValidationSchema = validationSchema[activeStep];
 
     const methods = useForm({
         mode: 'all',
         resolver: yupResolver(currentValidationSchema)
     });
-    const handleNext = (data: FieldValues) => {
-        if (activeStep === 2) {
-            console.log(data);
+    
+    const handleNext = async (data: FieldValues) => {
+        const {nameOnCard, saveAddress, ...shippingAddress} = data;
+        if (activeStep === steps.length - 1) {
+            setLoading(true);
+            try {
+                const orderNumber = await agent.Orders.create({saveAddress, shippingAddress});
+                setOrderNumber(orderNumber);
+                setActiveStep(activeStep + 1);
+                dispatch(clearBasket());
+                setLoading(false);
+            } catch (error) {
+                console.log(error);
+                setLoading(false);
+            }
+        } else {
+            setActiveStep(activeStep + 1);
         }
-
-        setActiveStep(activeStep + 2);
     };
 
     const handleBack = () => {
@@ -58,16 +78,16 @@ export default function CheckoutPage() {
                 </Stepper>
                 <>
                     {activeStep === steps.length ? (
-                        <>
-                            <Typography variant="h5" gutterBottom>
-                                Thank you for your order.
-                            </Typography>
-                            <Typography variant="subtitle1">
-                                Your order number is #2001539. We have emailed your order
-                                confirmation, and will send you an update when your order has
-                                shipped.
-                            </Typography>
-                        </>
+                         <>
+                         <Typography variant="h5" gutterBottom>
+                             Thank you for your order.
+                         </Typography>
+                         <Typography variant="subtitle1">
+                             Your order number is #{orderNumber}. We have not emailed your order
+                             confirmation, and will not send you an update when your order has
+                             shipped as this is a fake store!
+                         </Typography>
+                     </>
                     ) : (
                         <form onSubmit={methods.handleSubmit(handleNext)}>
                             {getStepContent(activeStep)}
@@ -77,14 +97,15 @@ export default function CheckoutPage() {
                                         Back
                                     </Button>
                                 )}
-                                <Button
+                                 <LoadingButton
+                                    loading={loading}
                                     disabled={!methods.formState.isValid}
                                     variant="contained"
-                                    type="submit"
+                                    type='submit'
                                     sx={{ mt: 3, ml: 1 }}
                                 >
                                     {activeStep === steps.length - 1 ? 'Place order' : 'Next'}
-                                </Button>
+                                </LoadingButton>
                             </Box>
                         </form>
                     )}
