@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using API.Entities;
 
@@ -8,7 +8,7 @@ namespace API.Extensions
     {
         public static IQueryable<Product> Sort(this IQueryable<Product> query, string orderBy)
         {
-            if (string.IsNullOrEmpty(orderBy)) return query.OrderBy(p => p.Name);
+            if (string.IsNullOrEmpty(orderBy)) return query.OrderBy(p => p.Name); 
 
             query = orderBy switch
             {

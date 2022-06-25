@@ -1,8 +1,8 @@
-﻿using API.Entities;
-using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace API.Data
 {
@@ -28,7 +28,7 @@ namespace API.Data
                 };
 
                 await userManager.CreateAsync(admin, "Pa$$w0rd");
-                await userManager.AddToRolesAsync(admin, new[] { "Member", "Admin" });
+                await userManager.AddToRolesAsync(admin, new[] {"Member", "Admin"});
             }
 
             if (context.Products.Any()) return;

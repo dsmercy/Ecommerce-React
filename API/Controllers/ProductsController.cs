@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -20,7 +20,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<PagedList<Product>>> GetProducts([FromQuery] ProductParams productParams)
+        public async Task<ActionResult<PagedList<Product>>> GetProducts([FromQuery]ProductParams productParams)
         {
             var query = _context.Products
                 .Sort(productParams.OrderBy)
@@ -28,7 +28,7 @@ namespace API.Controllers
                 .Filter(productParams.Brands, productParams.Types)
                 .AsQueryable();
 
-            var products = await PagedList<Product>.ToPagedList(query,
+            var products = await PagedList<Product>.ToPagedList(query, 
                 productParams.PageNumber, productParams.PageSize);
 
             Response.AddPaginationHeader(products.MetaData);
@@ -52,7 +52,7 @@ namespace API.Controllers
             var brands = await _context.Products.Select(p => p.Brand).Distinct().ToListAsync();
             var types = await _context.Products.Select(p => p.Type).Distinct().ToListAsync();
 
-            return Ok(new { brands, types });
+            return Ok(new {brands, types});
         }
     }
 }

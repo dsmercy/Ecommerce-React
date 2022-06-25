@@ -1,4 +1,4 @@
-﻿namespace API.RequestHelpers
+namespace API.RequestHelpers
 {
     public class MetaData
     {
